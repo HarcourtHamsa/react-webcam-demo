@@ -1,23 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import Webcam from "react-webcam";
+import { useRef, useState } from "react";
 
 function App() {
+  const webcamRef = useRef(null);
+  const [imagePreview, setImagePreview] = useState(null);
+
+  const capture = () => {
+    const sc = webcamRef.current.getScreenshot();
+    setImagePreview(sc);
+  };
+
+  const removePhoto = () => {
+    setImagePreview(null);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <main>
+        <Webcam width={400} audio={false} ref={webcamRef} />
+        <div className="btn-container">
+          <button className="captureBtn" onClick={capture}>
+            Take Photo
+          </button>
+
+          {imagePreview && (
+            <button className="removeBtn" onClick={removePhoto}>
+              Remove Photo
+            </button>
+          )}
+        </div>
+      </main>
+
+      <aside>
+        <div className="image-preview">
+          {imagePreview && <img src={imagePreview} alt="preview" />}
+        </div>
+      </aside>
     </div>
   );
 }
